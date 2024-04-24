@@ -6,8 +6,10 @@ type LocalesObject struct {
 	Extension  string
 }
 
-// Holds dictionaries as values by their names as keys
+// Holds dictionaries as values by their names as keysg
 type Book map[string]Dictionary
 
 // Holds definitions by key and phrases by value
 type Dictionary map[string]string
+
+type Unmarshaller func(b []byte, dest any) error
