@@ -2,7 +2,6 @@ package driver_fs
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/vndg-rdmt/tlocales-go"
@@ -19,10 +18,14 @@ func TestDriver(t *testing.T) {
 		t.Error(err)
 	}
 
-	var b []byte
-	if b, err = json.MarshalIndent(dr.GetBook(), "", "  "); err != nil {
-		t.Error(err)
+	lc, ok := dr.GetLocales("something")
+	if !ok {
+		t.Error("not found locales")
 	}
 
-	fmt.Println(string(b))
+	if msg, ok := lc.Say("ch", "key1"); !ok {
+		t.Error("msg not found")
+	} else {
+		t.Log(msg)
+	}
 }
