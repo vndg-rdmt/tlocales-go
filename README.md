@@ -16,7 +16,7 @@ Package constructor is used to create `Loader`, which uses a user-defined driver
 so you can implement for yourself if needed, for example to load files from object storages, api and etc. Available drivers
 can be found in the drivers directory. Currently out-of-box packages has a default fs driver to load files from filesystem.
 
-> If modules traversing somehow does not works, just load drivers explicitly.
+> If modules traversing somehow does not works, just load drivers explicitly.g
 
 ```sh
 go get -u github.com/vndg-rdmt/tlocales-go/drivers
