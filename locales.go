@@ -1,60 +1,42 @@
 package tlocales
 
+import "golang.org/x/text/language"
+
 type Locales interface {
-	Load(key string, opts ...Option) error
-	GetDictionary(name string) (Dictionary, bool)
-	GetBook() Book
+	Say(lang string, key string) (string, bool)
 }
 
-func New() Locales {
-	return &instance{
-		book: Book{},
-	}
+type localesInstance struct {
+	polyglot Polyglot
 }
 
-type instance struct {
-	book Book
-}
-
-// GetBook implements Locales.
-func (self *instance) GetBook() Book {
-	return self.book
-}
-
-// GetDictionary implements Locales.
-func (self *instance) GetDictionary(name string) (Dictionary, bool) {
-	panic("")
-	// lx, ok := self.book[name]
-	// if !ok {
-	// 	return nil, false
-	// }
-
-	// return dict{lx: lx}, true
-}
-
-// Load implements Locales.
-func (self *instance) Load(key string, opts ...Option) error {
-
-	lc := loadContract{
-		unmarshallers: map[string]Unmarshaller{},
-		reader:        nil,
+// Say implements Locales.
+func (self *localesInstance) Say(lang string, key string) (string, bool) {
+	tags, _, err := language.ParseAcceptLanguage(lang)
+	if err != nil {
+		return "", false
 	}
 
-	for i := 0; i < len(opts); i++ {
-		opts[i](&lc)
+	if tags == nil || len(tags) == 0 {
+		return "", false
 	}
 
-	if lc.reader == nil {
-		return &LocalesError{
-			Type:    ErrTypeReaderProblem,
-			Message: "no reader driver provided",
-			Params:  nil,
+	var lx Lexicon
+	var ok bool
+	for i := 0; i < len(tags); i++ {
+		if lx, ok = self.polyglot[tags[i].String()]; ok {
+			break
 		}
 	}
 
-	if err := lc.loadBook(key, self.book); err != nil {
-		return err
+	if !ok {
+		return "", false
 	}
 
-	return nil
+	var msg string
+	if msg, ok = lx[key]; ok {
+		return msg, true
+	}
+
+	return "", false
 }
