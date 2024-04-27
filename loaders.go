@@ -45,7 +45,7 @@ func (self *loadContract) driverName() string {
 
 // Loads dictionaries by key for current
 // reader driver to a Book `bk`.
-func (self *loadContract) loadBook(key string, bk Book) error {
+func (self *loadContract) loadBook(key string, bk Book) *LocalesError {
 	var lu []RawDictionary
 	var err error
 

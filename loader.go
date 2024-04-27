@@ -1,7 +1,7 @@
 package tlocales
 
 type Loader interface {
-	Load(key string, opts ...Option) error
+	Load(key string, opts ...Option) *LocalesError
 	GetLocales(name string) (Locales, bool)
 	GetBook() Book
 }
@@ -32,7 +32,7 @@ func (self *instance) GetLocales(dictname string) (Locales, bool) {
 }
 
 // Load implements Locales.
-func (self *instance) Load(key string, opts ...Option) error {
+func (self *instance) Load(key string, opts ...Option) *LocalesError {
 
 	lc := loadContract{
 		unmarshallers: map[string]Unmarshaller{},
